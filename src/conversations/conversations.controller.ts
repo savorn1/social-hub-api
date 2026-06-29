@@ -2,10 +2,12 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
   Patch,
   Param,
   Query,
+  Request,
   UseGuards,
   ParseIntPipe,
   UseInterceptors,
@@ -57,13 +59,27 @@ export class ConversationsController {
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'platform', required: false, type: String })
   @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'status', required: false, type: String })
+  @ApiQuery({ name: 'priority', required: false, type: String })
+  @ApiQuery({ name: 'isArchived', required: false, type: Boolean })
   findAll(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
     @Query('platform') platform?: string,
     @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('priority') priority?: string,
+    @Query('isArchived') isArchived?: string,
   ) {
-    return this.conversationsService.findAll(page, limit, platform, search);
+    return this.conversationsService.findAll(
+      page,
+      limit,
+      platform,
+      search,
+      status,
+      priority,
+      isArchived === 'true',
+    );
   }
 
   @Get(':id')
@@ -142,5 +158,27 @@ export class ConversationsController {
     @Query('comment') comment?: string,
   ) {
     return this.conversationsService.submitCsat(id, score, comment);
+  }
+
+  @Get(':id/notes')
+  @ApiOperation({ summary: 'List internal notes for a conversation' })
+  getNotes(@Param('id') id: string) {
+    return this.conversationsService.getNotes(id);
+  }
+
+  @Post(':id/notes')
+  @ApiOperation({ summary: 'Add an internal note to a conversation' })
+  addNote(
+    @Param('id') id: string,
+    @Body('content') content: string,
+    @Request() req: { user?: { id?: string } },
+  ) {
+    return this.conversationsService.addNote(id, content, req.user?.id);
+  }
+
+  @Delete('notes/:noteId')
+  @ApiOperation({ summary: 'Delete an internal note' })
+  deleteNote(@Param('noteId') noteId: string) {
+    return this.conversationsService.deleteNote(noteId);
   }
 }

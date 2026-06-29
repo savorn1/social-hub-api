@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Platform } from '../../common/enums/platform.enum';
-import { ConversationStatus } from '../../common/enums/status.enum';
+import { ConversationStatus, ConversationPriority } from '../../common/enums/status.enum';
 import { Message } from './message.entity';
 import { User } from '../../users/entities/user.entity';
 
@@ -54,6 +54,16 @@ export class Conversation {
 
   @Column({ type: 'simple-array', nullable: true, default: [] })
   labels: string[];
+
+  @Column({
+    type: 'enum',
+    enum: ConversationPriority,
+    default: ConversationPriority.NORMAL,
+  })
+  priority: ConversationPriority;
+
+  @Column({ default: false })
+  isArchived: boolean;
 
   @Column({ type: 'int', nullable: true })
   csatScore?: number;

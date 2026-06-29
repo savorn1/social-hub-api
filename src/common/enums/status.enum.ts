@@ -12,6 +12,13 @@ export enum ConversationStatus {
   CLOSED = 'closed',
 }
 
+export enum ConversationPriority {
+  URGENT = 'urgent',
+  HIGH = 'high',
+  NORMAL = 'normal',
+  LOW = 'low',
+}
+
 export enum MessageStatus {
   SENT = 'sent',
   DELIVERED = 'delivered',

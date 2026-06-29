@@ -10,7 +10,7 @@ import {
   Max,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { ConversationStatus } from '../../common/enums/status.enum';
+import { ConversationStatus, ConversationPriority } from '../../common/enums/status.enum';
 
 export class UpdateConversationDto {
   @ApiPropertyOptional({ enum: ConversationStatus })
@@ -45,4 +45,15 @@ export class UpdateConversationDto {
   @IsBoolean()
   @IsOptional()
   handoverMode?: boolean;
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  @ApiPropertyOptional({ enum: ConversationPriority })
+  @IsEnum(ConversationPriority)
+  @IsOptional()
+  priority?: ConversationPriority;
+
+  @ApiPropertyOptional()
+  @IsBoolean()
+  @IsOptional()
+  isArchived?: boolean;
 }

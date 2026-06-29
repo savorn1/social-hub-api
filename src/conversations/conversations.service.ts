@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Conversation } from './entities/conversation.entity';
 import { Message } from './entities/message.entity';
+import { ConversationNote } from './entities/conversation-note.entity';
 import { CreateConversationDto } from './dto/create-conversation.dto';
 import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
@@ -18,6 +19,8 @@ export class ConversationsService {
     private readonly conversationsRepo: Repository<Conversation>,
     @InjectRepository(Message)
     private readonly messagesRepo: Repository<Message>,
+    @InjectRepository(ConversationNote)
+    private readonly notesRepo: Repository<ConversationNote>,
   ) {}
 
   async create(dto: CreateConversationDto): Promise<Conversation> {
@@ -49,7 +52,15 @@ export class ConversationsService {
     await this.conversationsRepo.update(id, { metadata } as Parameters<typeof this.conversationsRepo.update>[1]);
   }
 
-  async findAll(page = 1, limit = 20, platform?: string, search?: string) {
+  async findAll(
+    page = 1,
+    limit = 20,
+    platform?: string,
+    search?: string,
+    status?: string,
+    priority?: string,
+    isArchived = false,
+  ) {
     const { skip, take } = getPaginationParams(page, limit);
     const qb = this.conversationsRepo
       .createQueryBuilder('c')
@@ -57,7 +68,10 @@ export class ConversationsService {
       .orderBy('c.updatedAt', 'DESC')
       .skip(skip)
       .take(take);
+    qb.andWhere('c.isArchived = :isArchived', { isArchived });
     if (platform) qb.andWhere('c.platform = :platform', { platform });
+    if (status) qb.andWhere('c.status = :status', { status });
+    if (priority) qb.andWhere('c.priority = :priority', { priority });
     if (search) {
       qb.andWhere(
         '(LOWER(c.contactName) LIKE :search OR LOWER(c.contactId) LIKE :search)',
@@ -177,5 +191,30 @@ export class ConversationsService {
       take,
     });
     return paginate(data, total, page, limit);
+  }
+
+  async getNotes(conversationId: string): Promise<ConversationNote[]> {
+    return this.notesRepo.find({
+      where: { conversationId },
+      relations: ['author'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async addNote(
+    conversationId: string,
+    content: string,
+    authorId?: string,
+  ): Promise<ConversationNote> {
+    await this.findOne(conversationId);
+    return this.notesRepo.save(
+      this.notesRepo.create({ conversationId, content, authorId }),
+    );
+  }
+
+  async deleteNote(id: string): Promise<void> {
+    const note = await this.notesRepo.findOne({ where: { id } });
+    if (!note) throw new ResourceNotFoundException('ConversationNote');
+    await this.notesRepo.remove(note);
   }
 }
