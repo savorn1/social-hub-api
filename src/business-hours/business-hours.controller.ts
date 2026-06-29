@@ -20,7 +20,13 @@ export class BusinessHoursController {
   @ApiOperation({ summary: 'Update business hours for a day (0=Sun … 6=Sat)' })
   upsert(
     @Param('day') day: string,
-    @Body() dto: { isEnabled?: boolean; startTime?: string; endTime?: string; timezone?: string },
+    @Body()
+    dto: {
+      isEnabled?: boolean;
+      startTime?: string;
+      endTime?: string;
+      timezone?: string;
+    },
   ) {
     return this.service.upsert(+day, dto);
   }

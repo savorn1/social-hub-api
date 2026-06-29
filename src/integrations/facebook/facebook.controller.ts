@@ -81,7 +81,9 @@ export class FacebookController {
   }
 
   @Post('sync-pages')
-  @ApiOperation({ summary: 'Fetch all pages manageable by a User Access Token' })
+  @ApiOperation({
+    summary: 'Fetch all pages manageable by a User Access Token',
+  })
   async syncPages(@Body() dto: SyncPagesDto) {
     if (!dto.userAccessToken) {
       throw new BadRequestException('userAccessToken is required');
@@ -90,12 +92,15 @@ export class FacebookController {
   }
 
   @Post('conversations/:id/send')
-  @ApiOperation({ summary: 'Send an agent reply to Facebook (Messenger or comment)' })
+  @ApiOperation({
+    summary: 'Send an agent reply to Facebook (Messenger or comment)',
+  })
   async sendReply(
     @Param('id') conversationId: string,
     @Body() dto: SendReplyDto,
   ) {
-    const conversation = await this.conversationsService.findOne(conversationId);
+    const conversation =
+      await this.conversationsService.findOne(conversationId);
 
     const message = await this.conversationsService.addMessage({
       conversationId,
@@ -112,7 +117,9 @@ export class FacebookController {
     if (inbox?.accessToken) {
       const isComment = conversation.metadata?.type === 'comment';
       if (isComment) {
-        const lastCommentId = conversation.metadata?.lastCommentId as string | undefined;
+        const lastCommentId = conversation.metadata?.lastCommentId as
+          | string
+          | undefined;
         if (lastCommentId) {
           await this.facebookService.replyToComment(
             lastCommentId,

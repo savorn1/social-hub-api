@@ -48,7 +48,9 @@ export class RoutingRulesService {
         const actual = this.getField(conversation, cond.field);
         if (cond.operator === 'equals') return actual === cond.value;
         if (cond.operator === 'contains')
-          return actual?.toLowerCase().includes(cond.value.toLowerCase()) ?? false;
+          return (
+            actual?.toLowerCase().includes(cond.value.toLowerCase()) ?? false
+          );
         return false;
       });
 

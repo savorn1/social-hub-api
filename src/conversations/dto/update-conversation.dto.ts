@@ -10,7 +10,10 @@ import {
   Max,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { ConversationStatus, ConversationPriority } from '../../common/enums/status.enum';
+import {
+  ConversationStatus,
+  ConversationPriority,
+} from '../../common/enums/status.enum';
 
 export class UpdateConversationDto {
   @ApiPropertyOptional({ enum: ConversationStatus })

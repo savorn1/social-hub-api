@@ -1,6 +1,12 @@
 import {
-  Controller, Get, Post, Patch, Delete,
-  Param, Body, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { RoutingRulesService } from './routing-rules.service';
@@ -16,11 +22,15 @@ export class RoutingRulesController {
 
   @Get()
   @ApiOperation({ summary: 'List all routing rules' })
-  findAll() { return this.service.findAll(); }
+  findAll() {
+    return this.service.findAll();
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a routing rule' })
-  create(@Body() dto: Partial<RoutingRule>) { return this.service.create(dto); }
+  create(@Body() dto: Partial<RoutingRule>) {
+    return this.service.create(dto);
+  }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a routing rule' })
@@ -30,5 +40,7 @@ export class RoutingRulesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a routing rule' })
-  remove(@Param('id') id: string) { return this.service.remove(id); }
+  remove(@Param('id') id: string) {
+    return this.service.remove(id);
+  }
 }

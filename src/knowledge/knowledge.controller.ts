@@ -66,7 +66,10 @@ export class KnowledgeController {
 
   @Patch('items/:id')
   @ApiOperation({ summary: 'Update a knowledge item' })
-  updateItem(@Param('id') id: string, @Body() dto: Partial<CreateKnowledgeItemDto>) {
+  updateItem(
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateKnowledgeItemDto>,
+  ) {
     return this.knowledgeService.updateItem(id, dto);
   }
 
@@ -77,7 +80,9 @@ export class KnowledgeController {
   }
 
   @Post('bases/:id/upload')
-  @ApiOperation({ summary: 'Upload a PDF, DOCX, or TXT file and parse into knowledge items' })
+  @ApiOperation({
+    summary: 'Upload a PDF, DOCX, or TXT file and parse into knowledge items',
+  })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FileInterceptor('file', { limits: { fileSize: 20 * 1024 * 1024 } }),
@@ -87,8 +92,13 @@ export class KnowledgeController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('No file uploaded');
-    if (!ALLOWED_MIMETYPES.has(file.mimetype) && !file.originalname.match(/\.(pdf|docx|txt)$/i)) {
-      throw new BadRequestException('Only PDF, DOCX, and TXT files are supported');
+    if (
+      !ALLOWED_MIMETYPES.has(file.mimetype) &&
+      !file.originalname.match(/\.(pdf|docx|txt)$/i)
+    ) {
+      throw new BadRequestException(
+        'Only PDF, DOCX, and TXT files are supported',
+      );
     }
     return this.knowledgeService.uploadDocument(id, file);
   }

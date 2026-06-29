@@ -49,7 +49,9 @@ export class ConversationsService {
     id: string,
     metadata: Record<string, unknown>,
   ): Promise<void> {
-    await this.conversationsRepo.update(id, { metadata } as Parameters<typeof this.conversationsRepo.update>[1]);
+    await this.conversationsRepo.update(id, { metadata } as Parameters<
+      typeof this.conversationsRepo.update
+    >[1]);
   }
 
   async findAll(

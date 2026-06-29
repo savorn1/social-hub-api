@@ -9,7 +9,10 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Platform } from '../../common/enums/platform.enum';
-import { ConversationStatus, ConversationPriority } from '../../common/enums/status.enum';
+import {
+  ConversationStatus,
+  ConversationPriority,
+} from '../../common/enums/status.enum';
 import { Message } from './message.entity';
 import { User } from '../../users/entities/user.entity';
 

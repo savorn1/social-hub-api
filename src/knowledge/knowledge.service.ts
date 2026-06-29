@@ -2,7 +2,9 @@ import { Injectable, Logger, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require('pdf-parse') as (buf: Buffer) => Promise<{ text: string }>;
+const pdfParse = require('pdf-parse') as (
+  buf: Buffer,
+) => Promise<{ text: string }>;
 import * as mammoth from 'mammoth';
 import { KnowledgeBase } from './entities/knowledge-base.entity';
 import { KnowledgeItem } from './entities/knowledge-item.entity';
@@ -28,7 +30,9 @@ function chunkText(text: string): string[] {
 
 function cosineSimilarity(a: number[], b: number[]): number {
   if (!a.length || !b.length || a.length !== b.length) return 0;
-  let dot = 0, magA = 0, magB = 0;
+  let dot = 0,
+    magA = 0,
+    magB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     magA += a[i] * a[i];
@@ -60,23 +64,36 @@ export class KnowledgeService {
   }
 
   async findOneBase(id: string): Promise<KnowledgeBase> {
-    const kb = await this.kbRepo.findOne({ where: { id }, relations: ['items'] });
+    const kb = await this.kbRepo.findOne({
+      where: { id },
+      relations: ['items'],
+    });
     if (!kb) throw new ResourceNotFoundException('KnowledgeBase');
     return kb;
   }
 
-  async addItem(knowledgeBaseId: string, dto: CreateKnowledgeItemDto): Promise<KnowledgeItem> {
+  async addItem(
+    knowledgeBaseId: string,
+    dto: CreateKnowledgeItemDto,
+  ): Promise<KnowledgeItem> {
     const kb = await this.kbRepo.findOne({ where: { id: knowledgeBaseId } });
     if (!kb) throw new ResourceNotFoundException('KnowledgeBase');
     const embedding = await this.aiService.generateEmbedding(
       `${dto.question} ${dto.answer}`,
     );
     return this.itemRepo.save(
-      this.itemRepo.create({ ...dto, knowledgeBaseId, embedding: embedding.length ? embedding : undefined }),
+      this.itemRepo.create({
+        ...dto,
+        knowledgeBaseId,
+        embedding: embedding.length ? embedding : undefined,
+      }),
     );
   }
 
-  async updateItem(id: string, dto: Partial<CreateKnowledgeItemDto>): Promise<KnowledgeItem> {
+  async updateItem(
+    id: string,
+    dto: Partial<CreateKnowledgeItemDto>,
+  ): Promise<KnowledgeItem> {
     const item = await this.itemRepo.findOne({ where: { id } });
     if (!item) throw new ResourceNotFoundException('KnowledgeItem');
     Object.assign(item, dto);
@@ -120,7 +137,10 @@ export class KnowledgeService {
     return { inserted };
   }
 
-  async searchItems(query: string, knowledgeBaseId?: string): Promise<KnowledgeItem[]> {
+  async searchItems(
+    query: string,
+    knowledgeBaseId?: string,
+  ): Promise<KnowledgeItem[]> {
     const queryEmbedding = await this.aiService.generateEmbedding(query);
 
     if (queryEmbedding.length) {
@@ -130,11 +150,16 @@ export class KnowledgeService {
         .where('item.isActive = true')
         .andWhere('item.embedding IS NOT NULL');
       if (knowledgeBaseId)
-        qb.andWhere('item.knowledgeBaseId = :knowledgeBaseId', { knowledgeBaseId });
+        qb.andWhere('item.knowledgeBaseId = :knowledgeBaseId', {
+          knowledgeBaseId,
+        });
       const items = await qb.getMany();
 
       return items
-        .map((item) => ({ item, score: cosineSimilarity(queryEmbedding, item.embedding ?? []) }))
+        .map((item) => ({
+          item,
+          score: cosineSimilarity(queryEmbedding, item.embedding ?? []),
+        }))
         .sort((a, b) => b.score - a.score)
         .slice(0, 8)
         .filter((r) => r.score > 0.25)
@@ -145,11 +170,16 @@ export class KnowledgeService {
     const qb = this.itemRepo
       .createQueryBuilder('item')
       .where('item.isActive = true')
-      .andWhere('(LOWER(item.question) LIKE :q OR LOWER(item.answer) LIKE :q)', {
-        q: `%${query.toLowerCase()}%`,
-      });
+      .andWhere(
+        '(LOWER(item.question) LIKE :q OR LOWER(item.answer) LIKE :q)',
+        {
+          q: `%${query.toLowerCase()}%`,
+        },
+      );
     if (knowledgeBaseId)
-      qb.andWhere('item.knowledgeBaseId = :knowledgeBaseId', { knowledgeBaseId });
+      qb.andWhere('item.knowledgeBaseId = :knowledgeBaseId', {
+        knowledgeBaseId,
+      });
     return qb.limit(10).getMany();
   }
 
@@ -160,9 +190,11 @@ export class KnowledgeService {
   }
 
   private detectType(mimetype: string, filename: string): string {
-    if (mimetype === 'application/pdf' || filename.endsWith('.pdf')) return 'pdf';
+    if (mimetype === 'application/pdf' || filename.endsWith('.pdf'))
+      return 'pdf';
     if (
-      mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       filename.endsWith('.docx')
     )
       return 'docx';

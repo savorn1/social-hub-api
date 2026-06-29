@@ -176,7 +176,8 @@ export class TelegramController {
     @Param('id') conversationId: string,
     @Body() dto: SendReplyDto,
   ) {
-    const conversation = await this.conversationsService.findOne(conversationId);
+    const conversation =
+      await this.conversationsService.findOne(conversationId);
 
     const message = await this.conversationsService.addMessage({
       conversationId,

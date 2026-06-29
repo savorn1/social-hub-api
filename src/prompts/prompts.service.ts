@@ -62,7 +62,9 @@ export class PromptsService {
   }
 
   async restore(id: string, versionId: string): Promise<Prompt> {
-    const version = await this.versionsRepo.findOne({ where: { id: versionId, promptId: id } });
+    const version = await this.versionsRepo.findOne({
+      where: { id: versionId, promptId: id },
+    });
     if (!version) throw new ResourceNotFoundException('PromptVersion');
     return this.update(id, { content: version.content });
   }

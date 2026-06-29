@@ -3,7 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BusinessHours } from './entities/business-hours.entity';
 
-const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const DAY_NAMES = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
 
 @Injectable()
 export class BusinessHoursService implements OnModuleInit {
@@ -35,7 +43,12 @@ export class BusinessHoursService implements OnModuleInit {
 
   async upsert(
     dayOfWeek: number,
-    dto: { isEnabled?: boolean; startTime?: string; endTime?: string; timezone?: string },
+    dto: {
+      isEnabled?: boolean;
+      startTime?: string;
+      endTime?: string;
+      timezone?: string;
+    },
   ): Promise<BusinessHours> {
     let record = await this.repo.findOne({ where: { dayOfWeek } });
     if (!record) record = this.repo.create({ dayOfWeek });

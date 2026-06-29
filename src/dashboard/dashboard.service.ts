@@ -26,8 +26,12 @@ export class DashboardService {
       totalAgents,
     ] = await Promise.all([
       this.conversationsRepo.count(),
-      this.conversationsRepo.count({ where: { status: ConversationStatus.OPEN } }),
-      this.conversationsRepo.count({ where: { status: ConversationStatus.RESOLVED } }),
+      this.conversationsRepo.count({
+        where: { status: ConversationStatus.OPEN },
+      }),
+      this.conversationsRepo.count({
+        where: { status: ConversationStatus.RESOLVED },
+      }),
       this.messagesRepo.count(),
       this.usersRepo.count(),
     ]);
@@ -44,7 +48,9 @@ export class DashboardService {
       resolvedConversations,
       totalMessages,
       totalAgents,
-      csatAverage: csatAvg?.avg ? Math.round(parseFloat(csatAvg.avg) * 10) / 10 : null,
+      csatAverage: csatAvg?.avg
+        ? Math.round(parseFloat(csatAvg.avg) * 10) / 10
+        : null,
     };
   }
 

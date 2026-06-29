@@ -8,7 +8,13 @@ import { ChatbotModule } from '../../chatbot/chatbot.module';
 import { BusinessHoursModule } from '../../business-hours/business-hours.module';
 
 @Module({
-  imports: [HttpModule, ConversationsModule, InboxModule, ChatbotModule, BusinessHoursModule],
+  imports: [
+    HttpModule,
+    ConversationsModule,
+    InboxModule,
+    ChatbotModule,
+    BusinessHoursModule,
+  ],
   controllers: [FacebookController],
   providers: [FacebookService],
   exports: [FacebookService],
