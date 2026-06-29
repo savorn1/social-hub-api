@@ -6,6 +6,8 @@ export default registerAs('integrations', () => ({
     appSecret: process.env.FB_APP_SECRET,
     verifyToken: process.env.FB_VERIFY_TOKEN,
     webhookUrl: process.env.FB_WEBHOOK_URL,
+    graphApiUrl:
+      process.env.FB_GRAPH_API_URL || 'https://graph.facebook.com/v25.0',
   },
   telegram: {
     botToken: process.env.TELEGRAM_BOT_TOKEN,

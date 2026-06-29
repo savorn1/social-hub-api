@@ -19,6 +19,7 @@ export class FacebookService {
   private readonly logger = new Logger(FacebookService.name);
   private readonly verifyToken: string;
   private readonly appUrl: string;
+  private readonly graphApiUrl: string;
 
   constructor(
     private readonly configService: ConfigService,
@@ -32,6 +33,9 @@ export class FacebookService {
       configService.get<string>('integrations.facebook.verifyToken') ?? '';
     this.appUrl =
       configService.get<string>('app.url') ?? 'http://localhost:3000';
+    this.graphApiUrl =
+      configService.get<string>('integrations.facebook.graphApiUrl') ??
+      'https://graph.facebook.com/v25.0';
   }
 
   verifyWebhook(mode: string, token: string, challenge: string): string | null {
@@ -171,7 +175,7 @@ export class FacebookService {
     try {
       await firstValueFrom(
         this.httpService.post(
-          `https://graph.facebook.com/v19.0/me/messages`,
+          `${this.graphApiUrl}/me/messages`,
           { recipient: { id: recipientId }, message: { text } },
           { params: { access_token: accessToken } },
         ),
@@ -190,7 +194,7 @@ export class FacebookService {
     try {
       await firstValueFrom(
         this.httpService.post(
-          `https://graph.facebook.com/v19.0/${commentId}/comments`,
+          `${this.graphApiUrl}/${commentId}/comments`,
           { message },
           { params: { access_token: accessToken } },
         ),
@@ -205,7 +209,7 @@ export class FacebookService {
     try {
       const resp = await firstValueFrom(
         this.httpService.get<{ data: FacebookPage[] }>(
-          `https://graph.facebook.com/v19.0/me/accounts`,
+          `${this.graphApiUrl}/me/accounts`,
           {
             params: {
               access_token: userAccessToken,
