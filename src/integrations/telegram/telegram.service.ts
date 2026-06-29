@@ -134,7 +134,9 @@ export class TelegramService {
     const withinHours = await this.businessHoursService.isWithinBusinessHours();
     let outgoingText: string | null = null;
 
-    if (!withinHours) {
+    if (conversation.handoverMode) {
+      // human agent has taken over — skip bot
+    } else if (!withinHours) {
       outgoingText =
         "We're currently outside business hours. We'll get back to you as soon as possible!";
     } else {

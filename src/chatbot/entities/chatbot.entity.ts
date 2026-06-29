@@ -39,6 +39,9 @@ export class Chatbot {
   @Column({ nullable: true })
   promptId?: string;
 
+  @Column({ nullable: true })
+  language?: string;
+
   @Column({ type: 'jsonb', default: [] })
   flows: FlowStep[];
 

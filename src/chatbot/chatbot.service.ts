@@ -61,7 +61,11 @@ export class ChatbotService {
         );
         if (matched) return this.resolveStep(step, bot, conversationId);
       } else if (step.trigger === TriggerType.GREETING) {
-        if (/^(hi|hello|hey|good\s+morning|good\s+afternoon|good\s+evening)/i.test(text)) {
+        if (
+          /^(hi|hello|hey|good\s+morning|good\s+afternoon|good\s+evening)/i.test(
+            text,
+          )
+        ) {
           return this.resolveStep(step, bot, conversationId);
         }
       } else if (step.trigger === TriggerType.FALLBACK) {
@@ -69,7 +73,8 @@ export class ChatbotService {
       }
     }
 
-    if (fallbackStep) return this.resolveStep(fallbackStep, bot, conversationId);
+    if (fallbackStep)
+      return this.resolveStep(fallbackStep, bot, conversationId);
 
     return null;
   }
@@ -84,6 +89,7 @@ export class ChatbotService {
         conversationId,
         promptId: bot.promptId,
         knowledgeBaseId: bot.knowledgeBaseId,
+        language: bot.language,
       });
     }
     return step.response ?? null;

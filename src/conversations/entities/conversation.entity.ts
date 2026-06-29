@@ -64,6 +64,9 @@ export class Conversation {
   @Column({ nullable: true })
   csatSentAt?: Date;
 
+  @Column({ default: false })
+  handoverMode: boolean;
+
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, unknown>;
 

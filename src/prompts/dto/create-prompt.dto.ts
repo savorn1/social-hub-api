@@ -1,5 +1,12 @@
-import { IsString, IsOptional, IsBoolean, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsArray,
+  IsEnum,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { PromptCategory } from '../entities/prompt.entity';
 
 export class CreatePromptDto {
   @ApiProperty()
@@ -14,6 +21,11 @@ export class CreatePromptDto {
   @ApiProperty()
   @IsString()
   content: string;
+
+  @ApiPropertyOptional({ enum: PromptCategory })
+  @IsEnum(PromptCategory)
+  @IsOptional()
+  category?: PromptCategory;
 
   @ApiPropertyOptional({ type: [String] })
   @IsArray()

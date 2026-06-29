@@ -53,8 +53,11 @@ export class AiService {
     );
     const recentMessages = messagesResult.data.reverse(); // oldest first
 
-    let systemContent =
-      'You are a helpful customer support agent. Respond professionally and concisely.';
+    const languageInstruction = dto.language
+      ? `Always reply in this language: ${dto.language}.`
+      : 'Detect the language of the user message and always reply in that same language.';
+
+    let systemContent = `You are a helpful customer support agent. Respond professionally and concisely. ${languageInstruction}`;
 
     if (dto.promptId) {
       try {
@@ -98,6 +101,22 @@ export class AiService {
     ];
 
     return this.chatCompletion({ messages, temperature: dto.temperature });
+  }
+
+  async generateEmbedding(text: string): Promise<number[]> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post<{ data: { embedding: number[] }[] }>(
+          'https://api.openai.com/v1/embeddings',
+          { model: 'text-embedding-3-small', input: text.slice(0, 8000) },
+          { headers: { Authorization: `Bearer ${this.apiKey}` } },
+        ),
+      );
+      return response.data.data[0].embedding;
+    } catch (error) {
+      this.logger.warn('Embedding generation failed, skipping', error);
+      return [];
+    }
   }
 
   async summarizeConversation(messages: string[]): Promise<string> {

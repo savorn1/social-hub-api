@@ -1,4 +1,14 @@
-import { IsEnum, IsOptional, IsUUID, IsArray, IsString, IsInt, Min, Max } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsUUID,
+  IsArray,
+  IsString,
+  IsBoolean,
+  IsInt,
+  Min,
+  Max,
+} from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ConversationStatus } from '../../common/enums/status.enum';
 
@@ -30,4 +40,9 @@ export class UpdateConversationDto {
   @IsString()
   @IsOptional()
   csatComment?: string;
+
+  @ApiPropertyOptional()
+  @IsBoolean()
+  @IsOptional()
+  handoverMode?: boolean;
 }

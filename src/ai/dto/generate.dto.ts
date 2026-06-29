@@ -29,6 +29,13 @@ export class GenerateReplyDto {
   @Max(1)
   @IsOptional()
   temperature?: number;
+
+  @ApiPropertyOptional({
+    description: 'BCP-47 language code to reply in. Auto-detect when omitted.',
+  })
+  @IsString()
+  @IsOptional()
+  language?: string;
 }
 
 export class ChatCompletionDto {

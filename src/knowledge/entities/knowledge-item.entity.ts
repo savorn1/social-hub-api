@@ -30,6 +30,15 @@ export class KnowledgeItem {
   @Column({ type: 'simple-array', nullable: true })
   tags?: string[];
 
+  @Column({ nullable: true })
+  source?: string;
+
+  @Column({ nullable: true })
+  sourceType?: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  embedding?: number[];
+
   @Column({ default: true })
   isActive: boolean;
 

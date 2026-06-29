@@ -25,4 +25,9 @@ export class CreateChatbotDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @ApiPropertyOptional({ description: 'BCP-47 language code, e.g. "en", "km", "zh". Auto-detect when omitted.' })
+  @IsString()
+  @IsOptional()
+  language?: string;
 }
