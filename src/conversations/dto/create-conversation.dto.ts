@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsObject } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Platform } from '../../common/enums/platform.enum';
 
@@ -26,4 +26,9 @@ export class CreateConversationDto {
   @IsString()
   @IsOptional()
   externalId?: string;
+
+  @ApiPropertyOptional()
+  @IsObject()
+  @IsOptional()
+  metadata?: Record<string, unknown>;
 }

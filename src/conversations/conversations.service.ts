@@ -9,7 +9,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { ResourceNotFoundException } from '../common/exceptions/business.exception';
 import { getPaginationParams, paginate } from '../common/utils/pagination.util';
 import { ConversationStatus } from '../common/enums/status.enum';
-import { MessageType } from '../common/enums/platform.enum';
+import { MessageType, Platform } from '../common/enums/platform.enum';
 
 @Injectable()
 export class ConversationsService {
@@ -22,6 +22,31 @@ export class ConversationsService {
 
   async create(dto: CreateConversationDto): Promise<Conversation> {
     return this.conversationsRepo.save(this.conversationsRepo.create(dto));
+  }
+
+  async findByContact(params: {
+    platform: string;
+    contactId: string;
+    pageId?: string;
+    externalId?: string;
+  }): Promise<Conversation | null> {
+    return this.conversationsRepo.findOne({
+      where: {
+        platform: params.platform as Platform,
+        contactId: params.contactId,
+        ...(params.pageId ? { pageId: params.pageId } : {}),
+        ...(params.externalId !== undefined
+          ? { externalId: params.externalId }
+          : {}),
+      },
+    });
+  }
+
+  async updateMetadata(
+    id: string,
+    metadata: Record<string, unknown>,
+  ): Promise<void> {
+    await this.conversationsRepo.update(id, { metadata } as Parameters<typeof this.conversationsRepo.update>[1]);
   }
 
   async findAll(page = 1, limit = 20, platform?: string, search?: string) {

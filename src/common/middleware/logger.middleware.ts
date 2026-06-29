@@ -3,10 +3,13 @@ import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  private readonly logger = new Logger('Request');
+  private readonly logger = new Logger('HTTP');
 
-  use(req: Request, _res: Response, next: NextFunction) {
-    this.logger.debug(`Incoming: ${req.method} ${req.originalUrl}`);
+  use(req: Request, res: Response, next: NextFunction) {
+    const { method, originalUrl, ip } = req;
+    const ua = req.headers['user-agent'] ?? '-';
+
+    this.logger.verbose(`→ ${method} ${originalUrl} [${ip}] "${ua}"`);
     next();
   }
 }

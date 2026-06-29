@@ -42,13 +42,12 @@ export class ConversationsController {
   }
 
   @Get('contacts')
-  @ApiOperation({ summary: 'List unique contacts grouped by contactId+platform' })
+  @ApiOperation({
+    summary: 'List unique contacts grouped by contactId+platform',
+  })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
-  getContacts(
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
-  ) {
+  getContacts(@Query('page') page?: number, @Query('limit') limit?: number) {
     return this.conversationsService.getContacts(page, limit);
   }
 
@@ -86,7 +85,9 @@ export class ConversationsController {
   }
 
   @Post(':id/upload')
-  @ApiOperation({ summary: 'Upload a file/image and attach it to a conversation' })
+  @ApiOperation({
+    summary: 'Upload a file/image and attach it to a conversation',
+  })
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -109,7 +110,9 @@ export class ConversationsController {
   ) {
     if (!file) throw new BadRequestException('No file uploaded');
     const mediaUrl = `/uploads/${file.filename}`;
-    const type = file.mimetype.startsWith('image/') ? MessageType.IMAGE : MessageType.FILE;
+    const type = file.mimetype.startsWith('image/')
+      ? MessageType.IMAGE
+      : MessageType.FILE;
     return this.conversationsService.addMessage({
       conversationId: id,
       type,
