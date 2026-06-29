@@ -28,7 +28,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest<Request>();
-    const { method, originalUrl, ip, query } = req;
+    const { method, originalUrl, query } = req;
     const user = (req as Request & { user?: { id?: string; email?: string } })
       .user;
     const start = Date.now();
@@ -42,11 +42,11 @@ export class LoggingInterceptor implements NestInterceptor {
       tap(() => {
         const res = context.switchToHttp().getResponse<Response>();
         const ms = Date.now() - start;
-        const userTag = user?.id ? ` user=${user.id}` : '';
-        const ipTag = ip ? ` ip=${ip}` : '';
+        // const userTag = user?.id ? ` user=${user.id}` : '';
+        // const ipTag = ip ? ` ip=${ip}` : '';
 
         this.logger.log(
-          `${method} ${originalUrl} → ${res.statusCode} +${ms}ms${userTag}${ipTag}`,
+          `${method} ${originalUrl} → ${res.statusCode} +${ms}ms`,
         );
         if (queryStr) this.logger.debug(`  ↳${queryStr}`);
         if (bodyStr) this.logger.debug(`  ↳ body=${bodyStr}`);

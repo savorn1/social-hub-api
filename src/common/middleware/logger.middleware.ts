@@ -6,10 +6,10 @@ export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');
 
   use(req: Request, res: Response, next: NextFunction) {
-    const { method, originalUrl, ip } = req;
-    const ua = req.headers['user-agent'] ?? '-';
+    const { method, originalUrl } = req;
+    // const ua = req.headers['user-agent'] ?? '-';
 
-    this.logger.verbose(`→ ${method} ${originalUrl} [${ip}] "${ua}"`);
+    this.logger.verbose(`→ ${method} ${originalUrl}`);
     next();
   }
 }
