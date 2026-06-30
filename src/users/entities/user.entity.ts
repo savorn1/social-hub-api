@@ -34,10 +34,6 @@ export class User extends AbstractEntity {
   @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
   status: Status;
 
-  @Column({ nullable: true })
-  @Exclude()
-  refreshToken?: string;
-
   @ManyToMany(() => Role, { eager: true })
   @JoinTable({ name: 'user_roles' })
   roles: Role[];

@@ -62,12 +62,4 @@ export class UsersService {
     return this.usersRepo.save(user);
   }
 
-  async updateRefreshToken(
-    id: string,
-    refreshToken: string | null,
-  ): Promise<void> {
-    await this.usersRepo.update(id, {
-      refreshToken: refreshToken ?? undefined,
-    });
-  }
 }

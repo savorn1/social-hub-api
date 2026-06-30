@@ -6,8 +6,10 @@ import {
   HealthCheck,
   DiskHealthIndicator,
   MemoryHealthIndicator,
+  HealthIndicatorService,
 } from '@nestjs/terminus';
 import { Public } from '../common/decorators/public.decorator';
+import { RedisService } from '../redis/redis.service';
 
 @ApiTags('Health')
 @Controller('health')
@@ -17,6 +19,8 @@ export class HealthController {
     private readonly db: TypeOrmHealthIndicator,
     private readonly disk: DiskHealthIndicator,
     private readonly memory: MemoryHealthIndicator,
+    private readonly healthIndicator: HealthIndicatorService,
+    private readonly redisService: RedisService,
   ) {}
 
   @Get()
@@ -26,6 +30,11 @@ export class HealthController {
   check() {
     return this.health.check([
       () => this.db.pingCheck('database'),
+      async () => {
+        const isAlive = await this.redisService.ping();
+        const session = this.healthIndicator.check('redis');
+        return isAlive ? session.up() : session.down();
+      },
       () =>
         this.disk.checkStorage('storage', { path: '/', thresholdPercent: 0.9 }),
       () => this.memory.checkHeap('memory_heap', 300 * 1024 * 1024),

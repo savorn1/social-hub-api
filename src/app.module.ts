@@ -10,6 +10,7 @@ import redisConfig from './config/redis.config';
 import integrationsConfig from './config/integrations.config';
 
 import { DatabaseModule } from './database/database.module';
+import { RedisModule } from './redis/redis.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
@@ -53,6 +54,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     DatabaseModule,
+    RedisModule,
     AuthModule,
     UsersModule,
     RolesModule,

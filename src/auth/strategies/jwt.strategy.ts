@@ -3,13 +3,15 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
+import { RedisService } from '../../redis/redis.service';
 import { JwtPayload } from '../../common/interfaces/api-response.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly configService: ConfigService,
+    configService: ConfigService,
     private readonly usersService: UsersService,
+    private readonly redisService: RedisService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,12 +23,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload) {
     const user = await this.usersService.findOne(payload.sub);
     if (!user) throw new UnauthorizedException();
+
+    const cached = await this.redisService.getPermissions(payload.sub);
+    const permissions =
+      cached ??
+      user.roles?.flatMap((r) => r.permissions?.map((p) => p.name) ?? []) ??
+      [];
+
     return {
       ...user,
       roles: user.roles?.map((r) => r.name) ?? [],
-      permissions:
-        user.roles?.flatMap((r) => r.permissions?.map((p) => p.name) ?? []) ??
-        [],
+      permissions,
     };
   }
 }
