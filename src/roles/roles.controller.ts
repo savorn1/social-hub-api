@@ -53,7 +53,10 @@ export class RolesController {
 
   @Put(':id/permissions')
   @ApiOperation({ summary: 'Assign permissions to a role (replaces existing)' })
-  assignPermissions(@Param('id') id: string, @Body() dto: AssignPermissionsDto) {
+  assignPermissions(
+    @Param('id') id: string,
+    @Body() dto: AssignPermissionsDto,
+  ) {
     return this.rolesService.update(id, { permissionIds: dto.permissionIds });
   }
 
