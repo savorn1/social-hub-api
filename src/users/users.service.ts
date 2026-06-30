@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { Role } from '../roles/entities/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { hashPassword } from '../common/utils/hash.util';
@@ -14,6 +15,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepo: Repository<User>,
+    @InjectRepository(Role)
+    private readonly rolesRepo: Repository<Role>,
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
@@ -49,6 +52,14 @@ export class UsersService {
   async remove(id: string): Promise<void> {
     const user = await this.findOne(id);
     await this.usersRepo.remove(user);
+  }
+
+  async assignRoles(id: string, roleIds: string[]): Promise<User> {
+    const user = await this.findOne(id);
+    user.roles = roleIds.length
+      ? await this.rolesRepo.findBy({ id: In(roleIds) })
+      : [];
+    return this.usersRepo.save(user);
   }
 
   async updateRefreshToken(

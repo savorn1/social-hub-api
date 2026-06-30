@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   Query,
@@ -18,6 +19,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AssignRolesDto } from './dto/assign-roles.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -55,6 +57,13 @@ export class UsersController {
   @ApiOperation({ summary: 'Update a user' })
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto);
+  }
+
+  @Put(':id/roles')
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Assign roles to a user (replaces existing)' })
+  assignRoles(@Param('id') id: string, @Body() dto: AssignRolesDto) {
+    return this.usersService.assignRoles(id, dto.roleIds);
   }
 
   @Delete(':id')

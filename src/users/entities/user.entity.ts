@@ -2,17 +2,16 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { Status } from '../../common/enums/status.enum';
 import { Role } from '../../roles/entities/role.entity';
 
 @Entity('users')
-export class User {
+export class User extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -42,12 +41,6 @@ export class User {
   @ManyToMany(() => Role, { eager: true })
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;

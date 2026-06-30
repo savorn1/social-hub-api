@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   UseGuards,
@@ -12,6 +13,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { AssignPermissionsDto } from './dto/assign-permissions.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -47,6 +49,12 @@ export class RolesController {
   @ApiOperation({ summary: 'Update a role' })
   update(@Param('id') id: string, @Body() dto: UpdateRoleDto) {
     return this.rolesService.update(id, dto);
+  }
+
+  @Put(':id/permissions')
+  @ApiOperation({ summary: 'Assign permissions to a role (replaces existing)' })
+  assignPermissions(@Param('id') id: string, @Body() dto: AssignPermissionsDto) {
+    return this.rolesService.update(id, { permissionIds: dto.permissionIds });
   }
 
   @Delete(':id')

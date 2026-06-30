@@ -1,15 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { KnowledgeItem } from './knowledge-item.entity';
 
 @Entity('knowledge_bases')
-export class KnowledgeBase {
+export class KnowledgeBase extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,10 +20,4 @@ export class KnowledgeBase {
     cascade: true,
   })
   items: KnowledgeItem[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

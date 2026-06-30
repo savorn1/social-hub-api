@@ -1,12 +1,8 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 
 @Entity('business_hours')
-export class BusinessHours {
+export class BusinessHours extends AbstractEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,7 +20,4 @@ export class BusinessHours {
 
   @Column({ default: 'UTC' })
   timezone: string;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

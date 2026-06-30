@@ -6,6 +6,10 @@ export class CreatePermissionDto {
   @IsString()
   name: string;
 
+  @ApiProperty({ example: 'USERS' })
+  @IsString()
+  module: string;
+
   @ApiProperty({ example: 'users' })
   @IsString()
   resource: string;

@@ -2,15 +2,14 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { KnowledgeBase } from './knowledge-base.entity';
 
 @Entity('knowledge_items')
-export class KnowledgeItem {
+export class KnowledgeItem extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -41,10 +40,4 @@ export class KnowledgeItem {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

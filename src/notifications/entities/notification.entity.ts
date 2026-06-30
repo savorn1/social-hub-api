@@ -2,10 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { NotificationStatus } from '../../common/enums/status.enum';
 import { User } from '../../users/entities/user.entity';
 
@@ -18,7 +18,7 @@ export enum NotificationType {
 }
 
 @Entity('notifications')
-export class Notification {
+export class Notification extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -47,7 +47,4 @@ export class Notification {
 
   @Column({ type: 'jsonb', nullable: true })
   data?: Record<string, unknown>;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

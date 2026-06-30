@@ -1,10 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 
 export type RuleConditionField = 'platform' | 'keyword' | 'contactId';
 export type RuleConditionOperator = 'equals' | 'contains';
@@ -18,7 +13,7 @@ export interface RuleCondition {
 export type RuleAction = 'assign_agent';
 
 @Entity('routing_rules')
-export class RoutingRule {
+export class RoutingRule extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -39,10 +34,4 @@ export class RoutingRule {
 
   @Column({ nullable: true })
   assignedAgentId?: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

@@ -2,12 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
   OneToMany,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { Platform } from '../../common/enums/platform.enum';
 import {
   ConversationStatus,
@@ -17,7 +16,7 @@ import { Message } from './message.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('conversations')
-export class Conversation {
+export class Conversation extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -82,10 +81,4 @@ export class Conversation {
 
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, unknown>;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

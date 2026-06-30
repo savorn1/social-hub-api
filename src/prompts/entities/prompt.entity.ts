@@ -1,10 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 
 export enum PromptCategory {
   SYSTEM = 'system',
@@ -15,7 +10,7 @@ export enum PromptCategory {
 }
 
 @Entity('prompts')
-export class Prompt {
+export class Prompt extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -43,10 +38,4 @@ export class Prompt {
 
   @Column({ default: 1 })
   currentVersion: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

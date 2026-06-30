@@ -11,8 +11,17 @@ export interface WhatsAppWebhookPayload {
           from: string;
           id: string;
           timestamp: string;
-          text?: { body: string };
           type: string;
+          text?: { body: string };
+          image?: { id: string; mime_type: string; caption?: string };
+          document?: {
+            id: string;
+            mime_type: string;
+            filename?: string;
+            caption?: string;
+          };
+          audio?: { id: string; mime_type: string };
+          video?: { id: string; mime_type: string; caption?: string };
         }>;
       };
       field: string;

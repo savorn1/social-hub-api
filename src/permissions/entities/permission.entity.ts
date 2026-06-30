@@ -1,14 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { Role } from '../../roles/entities/role.entity';
 
 @Entity('permissions')
-export class Permission {
+export class Permission extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,6 +14,9 @@ export class Permission {
   description?: string;
 
   @Column()
+  module: string;
+
+  @Column()
   resource: string;
 
   @Column()
@@ -26,7 +24,4 @@ export class Permission {
 
   @ManyToMany(() => Role, (role) => role.permissions)
   roles: Role[];
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

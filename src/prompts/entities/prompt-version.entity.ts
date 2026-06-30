@@ -2,14 +2,14 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 import { Prompt } from './prompt.entity';
 
 @Entity('prompt_versions')
-export class PromptVersion {
+export class PromptVersion extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,7 +25,4 @@ export class PromptVersion {
 
   @Column({ type: 'text' })
   content: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

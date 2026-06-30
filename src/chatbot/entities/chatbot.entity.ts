@@ -1,10 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { AbstractEntity } from '../../common/entities/base.entity';
 
 export enum TriggerType {
   KEYWORD = 'keyword',
@@ -20,7 +15,7 @@ export interface FlowStep {
 }
 
 @Entity('chatbots')
-export class Chatbot {
+export class Chatbot extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -44,10 +39,4 @@ export class Chatbot {
 
   @Column({ type: 'jsonb', default: [] })
   flows: FlowStep[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
